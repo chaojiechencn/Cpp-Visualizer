@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import type { VariableInfo, ArrayAccessInfo } from '@/lib/cpp-engine';
+import { useAnimationScale } from '@/lib/animation-speed';
 
 // React silently drops boolean children, so bools must be rendered as text.
 const formatCell = (val: any) => (typeof val === 'boolean' ? String(val) : val);
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export const ArrayVisualizer = ({ arrays, prevArrays, arrayAccesses = [], globalArrayNames }: Props) => {
+  const animScale = useAnimationScale();
   if (arrays.length === 0) return null;
 
   return (
@@ -50,12 +52,13 @@ export const ArrayVisualizer = ({ arrays, prevArrays, arrayAccesses = [], global
                     key={idx}
                     animate={changed ? {
                       scale: [1, 1.15, 1],
-                      transition: { duration: 0.3 },
+                      transition: { duration: 0.3 * animScale },
                     } : {}}
                     className="flex flex-col items-center"
                   >
                     <div
-                      className={`w-12 h-10 rounded-md border flex items-center justify-center font-mono text-sm font-semibold transition-all duration-200 ${
+                      style={{ transitionDuration: `${200 * animScale}ms` }}
+                      className={`w-12 h-10 rounded-md border flex items-center justify-center font-mono text-sm font-semibold transition-all ${
                         isAccessed
                           ? 'bg-viz-orange/25 border-viz-orange text-foreground ring-1 ring-viz-orange/50 shadow-[0_0_8px_hsla(38,92%,50%,0.3)]'
                           : changed

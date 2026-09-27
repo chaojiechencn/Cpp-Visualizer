@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import type { StackFrameInfo, VariableInfo } from '@/lib/cpp-engine';
 import { formatFrameLabel } from '@/lib/format';
+import { useAnimationScale } from '@/lib/animation-speed';
 
 interface Props {
   callStack: StackFrameInfo[];
@@ -16,6 +17,7 @@ const formatValue = (value: any): string => {
 };
 
 export const VariableInspector = ({ callStack, globals }: Props) => {
+  const animScale = useAnimationScale();
   const framesWithVars = callStack
     .map((frame, i) => ({
       frame,
@@ -50,7 +52,7 @@ export const VariableInspector = ({ callStack, globals }: Props) => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0, scale: 0.95 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.2 * animScale }}
                 className="grid grid-cols-4 text-sm font-mono border-t border-border"
               >
                 <div className="p-2 text-viz-green text-xs truncate" title={formatFrameLabel(frame)}>
@@ -64,7 +66,7 @@ export const VariableInspector = ({ callStack, globals }: Props) => {
                   key={JSON.stringify(v.value)}
                   initial={v.changed ? { backgroundColor: 'hsla(45, 97%, 56%, 0.25)' } : {}}
                   animate={{ backgroundColor: 'hsla(45, 97%, 56%, 0)' }}
-                  transition={{ duration: 0.8 }}
+                  transition={{ duration: 0.8 * animScale }}
                   className="p-2 font-semibold"
                 >
                   {v.isPointer ? (
@@ -83,7 +85,7 @@ export const VariableInspector = ({ callStack, globals }: Props) => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.2 * animScale }}
               className="grid grid-cols-4 text-sm font-mono border-t border-border"
             >
               <div className="p-2 text-viz-purple text-xs truncate">
@@ -97,7 +99,7 @@ export const VariableInspector = ({ callStack, globals }: Props) => {
                 key={JSON.stringify(v.value)}
                 initial={v.changed ? { backgroundColor: 'hsla(45, 97%, 56%, 0.25)' } : {}}
                 animate={{ backgroundColor: 'hsla(45, 97%, 56%, 0)' }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.8 * animScale }}
                 className="p-2 font-semibold"
               >
                 {v.isPointer ? (

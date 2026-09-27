@@ -1,5 +1,6 @@
 import type { StackFrameInfo } from '@/lib/cpp-engine';
 import { formatFrameLabel, formatReturnValue } from '@/lib/format';
+import { useAnimationScale } from '@/lib/animation-speed';
 
 interface Props {
   callStack: StackFrameInfo[];
@@ -18,6 +19,9 @@ const formatValue = (value: any): string => {
 };
 
 export const CallStackView = ({ callStack, sourceLines, selectedFrameIndex, onSelectFrame, nextLine }: Props) => {
+  const animScale = useAnimationScale();
+  // 150ms is Tailwind's default for `transition-colors`.
+  const colorFade = { transitionDuration: `${150 * animScale}ms` };
   if (callStack.length === 0) return null;
 
   return (
@@ -37,6 +41,7 @@ export const CallStackView = ({ callStack, sourceLines, selectedFrameIndex, onSe
             <div
               key={`${frame.name}-${originalIndex}`}
               onClick={() => onSelectFrame(originalIndex)}
+              style={colorFade}
               className={`rounded-lg border overflow-hidden transition-colors cursor-pointer ${
                 isSelected
                   ? 'border-viz-green/60 bg-viz-green/[0.08] ring-1 ring-viz-green/30'
@@ -85,6 +90,7 @@ export const CallStackView = ({ callStack, sourceLines, selectedFrameIndex, onSe
                   return (
                     <div
                       key={lineNum}
+                      style={colorFade}
                       className={`flex transition-colors ${
                         isActive
                           ? isTop

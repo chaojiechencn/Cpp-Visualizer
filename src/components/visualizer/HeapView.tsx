@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { HeapBlockInfo } from '@/lib/cpp-engine';
+import { scaledSpring, useAnimationScale } from '@/lib/animation-speed';
 
 interface Props {
   heap: HeapBlockInfo[];
@@ -18,6 +19,7 @@ const isStructValue = (v: unknown): v is Record<string, unknown> =>
 const formatScalar = (v: unknown): string => (typeof v === 'string' ? `"${v}"` : String(v));
 
 export const HeapView = ({ heap }: Props) => {
+  const animScale = useAnimationScale();
   // Address of the block currently being pointed at by a hovered/focused link.
   const [linkedAddr, setLinkedAddr] = useState<number | null>(null);
 
@@ -107,7 +109,7 @@ export const HeapView = ({ heap }: Props) => {
                 initial={{ opacity: 0, scale: 0.9, y: 10 }}
                 animate={{ opacity: block.freed ? 0.4 : 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                transition={scaledSpring(400, 30, animScale)}
                 className={`rounded-lg border p-3 font-mono text-sm ${
                   block.freed
                     ? 'border-viz-red/30 bg-viz-red/[0.05]'

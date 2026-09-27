@@ -1,11 +1,13 @@
 import { motion } from 'framer-motion';
 import { Terminal } from 'lucide-react';
+import { useAnimationScale } from '@/lib/animation-speed';
 
 interface Props {
   output: string;
 }
 
 export const OutputPanel = ({ output }: Props) => {
+  const animScale = useAnimationScale();
   return (
     <div className="space-y-2">
       <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
@@ -16,7 +18,7 @@ export const OutputPanel = ({ output }: Props) => {
         key={output.length}
         initial={{ opacity: 0.8 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.15 }}
+        transition={{ duration: 0.15 * animScale }}
         className="rounded-lg border border-border bg-background/80 p-3 font-mono text-sm min-h-[48px] whitespace-pre-wrap"
         style={{ fontFamily: "'JetBrains Mono', monospace" }}
       >
