@@ -3,9 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-// 1x is the historical 500ms interval; higher multipliers divide it.
+// 1x is the historical 500ms interval; each multiplier divides it. The slow
+// end is for following recursion and loops one step at a time (issue #3).
 const SPEED_OPTIONS = [
+  { label: '0.25x', ms: 2000 },
+  { label: '0.5x', ms: 1000 },
+  { label: '0.75x', ms: 667 },
   { label: '1x', ms: 500 },
+  { label: '1.5x', ms: 333 },
   { label: '2x', ms: 250 },
   { label: '5x', ms: 100 },
   { label: '20x', ms: 25 },
@@ -73,7 +78,7 @@ export const ExecutionControls = ({
         <SelectTrigger
           aria-label="Playback speed"
           title="Playback speed"
-          className="h-8 w-[70px] px-2 text-xs font-mono"
+          className="h-8 w-[80px] px-2 text-xs font-mono"
         >
           <SelectValue />
         </SelectTrigger>

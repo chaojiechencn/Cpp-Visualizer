@@ -13,6 +13,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { HelpModal } from '@/components/visualizer/HelpModal';
 import { ExamplePicker } from '@/components/visualizer/ExamplePicker';
 import { REPO_URL } from '@/lib/repo';
+import { AnimationScaleProvider, BASE_STEP_MS } from '@/lib/animation-speed';
 import { Button } from '@/components/ui/button';
 import type { ExampleProgram } from '@/lib/example-programs';
 
@@ -204,7 +205,9 @@ int main() {
           <ResizableHandle withHandle />
           {/* Bottom: Visualizer */}
           <ResizablePanel defaultSize={45} minSize={15}>
-            <VisualizationPanel currentStep={currentStep} prevStep={prevStep} sourceLines={code.split('\n')} />
+            <AnimationScaleProvider value={speed / BASE_STEP_MS}>
+              <VisualizationPanel currentStep={currentStep} prevStep={prevStep} sourceLines={code.split('\n')} />
+            </AnimationScaleProvider>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
