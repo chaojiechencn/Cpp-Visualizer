@@ -19,6 +19,7 @@ lockfile lets `bun install` resolve a different tree than `package-lock.json`.
 npm install
 npm run dev        # vite dev server (port 8080)
 npm run build      # production build
+npm test           # = vitest run (npm run test:watch for watch mode)
 npm run lint       # eslint — SEE BELOW, currently red
 ```
 
@@ -61,7 +62,7 @@ call `executeCode` on it from a vitest test instead.
 
 ## Architecture
 
-- `src/lib/cpp-engine.ts` (~1650 lines) is the entire engine:
+- `src/lib/cpp-engine.ts` (~1900 lines) is the entire engine:
   tokenizer -> recursive-descent parser -> tree-walking interpreter.
   **Do not split this file without asking me first.**
 - `executeCode(code, stdin)` is the only public entry point. Returns
@@ -91,6 +92,7 @@ call `executeCode` on it from a vitest test instead.
   in the header. Two carry a `stdin` field, which the picker loads too.
 - `src/lib/format.ts` — shared value/address formatting. Anything that prints a
   pointer, an argument or a return value goes through here so panels agree.
+- `src/lib/repo.ts` — `REPO_URL`, shared by the header button and the help modal.
 - `docs/` — `PLAN.md` is the completed bug-fix plan these stages followed, and
   the record of what the original bug list got wrong. The two design docs
   (`type-tracking-design.md`, `return-values-design.md`) cover the changes that
@@ -139,8 +141,10 @@ value — the same read-only-walk trick `StaticTypeOf` uses for `/`. A bare `*it
 that is the known price of this model, so don't be surprised by it.
 
 NOT supported: classes with methods, templates, inheritance, operator overloading,
-map/set/sort/`<algorithm>`, range-based for, `auto`, multiple files, 2D arrays,
-array parameters (`int a[]`), dereferencing or incrementing an iterator,
+map/set/sort/`<algorithm>`, range-based for, `auto`, `switch`, `do`/`while`, the
+ternary `?:`, multiple files, 2D arrays, array parameters (`int a[]`), brace
+initialization of a stack variable (`Node a{1, nullptr};` — the heap form
+`new Node{1, nullptr}` works), dereferencing or incrementing an iterator,
 `substr`/`find`/`insert`/`push_back` on strings.
 
 `#` lines are discarded by the tokenizer. Includes are never processed.
